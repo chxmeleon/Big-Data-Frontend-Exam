@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.liner-gradient {
+  background: linear-gradient(90deg, #e60000, #ffcc00, #007f00, #0000cc);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.header-shadow {
+  box-shadow: 0px 7px 10px 0px rgba(0, 0, 0, 0.2);
+}
