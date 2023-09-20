@@ -1,7 +1,11 @@
+import { Link } from 'react-router-dom';
+
 function Header() {
   return (
     <div className="fixed top-0 flex w-full h-12 items-center justify-between px-[16px] py-[10px] bg-[#651FFF] text-white header-shadow">
-      <div className="font-bold font-Ubuntu">LOGO</div>
+      <Link to="/" className="font-bold font-Ubuntu">
+        LOGO
+      </Link>
       <button
         type="button"
         disabled

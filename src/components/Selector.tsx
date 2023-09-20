@@ -2,17 +2,19 @@ import { clsx as cx } from 'clsx';
 import { years, data } from '../libs/data';
 
 type SelectorProps = {
-  yearParam: string;
-  countryParam: string;
-  setYearParam: React.Dispatch<React.SetStateAction<string>>;
-  setCountryParam: React.Dispatch<React.SetStateAction<string>>;
-  setDistrictParam: React.Dispatch<React.SetStateAction<string>>;
+  yearParam: string | undefined;
+  countryParam: string | undefined;
+  districtParam: string | undefined;
+  setYearParam: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setCountryParam: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setDistrictParam: React.Dispatch<React.SetStateAction<string | undefined>>;
   handleClick: () => void;
 };
 
 function Selector({
   yearParam,
   countryParam,
+  districtParam,
   setYearParam,
   setCountryParam,
   setDistrictParam,
@@ -41,6 +43,7 @@ function Selector({
         name="countries"
         id="countries"
         onChange={(e) => setCountryParam(e.target.value)}
+        defaultValue={countryParam}
       >
         <option value="" selected>
           請選擇 縣/市
@@ -56,12 +59,13 @@ function Selector({
         name="districts"
         id="districts"
         onChange={(e) => setDistrictParam(e.target.value)}
-        disabled={countryParam === ''}
+        disabled={countryParam === '' || countryParam === undefined}
+        defaultValue={districtParam}
       >
         <option value="" selected>
           請先選擇 縣/市
         </option>
-        {data.districts[countryParam]?.map((district) => (
+        {data.districts[countryParam as string]?.map((district) => (
           <option key={district} value={district}>
             {district}
           </option>
@@ -72,6 +76,7 @@ function Selector({
         type="submit"
         className="py-2.5 px-4 font-bold rounded bg-black/10 text-black/25 font-Ubuntu"
         onClick={handleClick}
+        disabled={districtParam === '' || districtParam === undefined}
       >
         SUBMIT
       </button>

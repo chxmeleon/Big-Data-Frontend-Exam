@@ -5,13 +5,13 @@ function DefaultLayout() {
   return (
     <main className="w-full h-screen">
       <Header />
-      <div className="pt-12 flex justify-start w-full">
+      <div className="flex justify-start pt-12 w-full">
         <div className="relative w-[146px]">
-          <div className="fixed top-14 left-0 w-full z-[-1]">
-            <img src="brand.png" alt="" />
+          <div className="fixed font-bold z-[-1] left-0 top-0 rotate-90 -translate-x-4 -translate-y-[61%] tracking-[3.2rem] liner-gradient text-[200px] font-Ubuntu">
+            TAIWAN
           </div>
         </div>
-        <div className="w-full h-full pt-2">
+        <div className="pt-2 w-full h-full">
           <Outlet />
         </div>
       </div>

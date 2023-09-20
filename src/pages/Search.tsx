@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import * as Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import Selector from '../components/Selector';
 
 const fetcher = (url: RequestInfo | URL) => fetch(url).then((r) => r.json());
@@ -28,22 +30,26 @@ function sumProperties(
 }
 
 function Search() {
-  const [yearParam, setYearParam] = useState<string>('111');
-  const [countryParam, setCountryParam] = useState<string>('');
-  const [districtParam, setDistrictParam] = useState<string>('');
+  const { year, country, district } = useParams();
+  const [yearParam, setYearParam] = useState<string | undefined>(year || '111');
+  const [countryParam, setCountryParam] = useState<string | undefined>(
+    country || '',
+  );
+  const [districtParam, setDistrictParam] = useState<string | undefined>(
+    district || '',
+  );
+  const [finalData, setFinalData] = useState<Record<string, number>>({});
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
 
-  const changeString = (str: string): string => (str.includes('台') ? str.replace('台', '臺') : str);
+  const changeString = (str: string | undefined): string | undefined => (str?.includes('台') ? str.replace('台', '臺') : str);
 
   const apiPath = `https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/${yearParam}?COUNTY=${changeString(
     countryParam,
   )}&TOWN=${changeString(districtParam)}`;
 
-  const { data: searchData, mutate } = useSWR(
-    isSubmited ? apiPath : null,
-    fetcher,
-  );
-  const allData: AllDataProps[] = searchData?.responseData;
+  const { data: searchData, isLoading, mutate } = useSWR(apiPath, fetcher);
+  const allData = searchData?.responseData;
+  const message = searchData?.responseMessage;
   const selectProperties = [
     'household_ordinary_total',
     'household_single_total',
@@ -53,14 +59,73 @@ function Search() {
     'household_ordinary_f',
   ];
 
+  const allProperties = Object.assign(
+    sumProperties(allData, selectProperties),
+    { title: `${yearParam}年 ${countryParam} ${districtParam}` },
+  );
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const [oldLocation, setOldLocation] = useState<string>(location.key);
+
   const hanleClick = () => {
+    setFinalData(allProperties);
     setIsSubmited(true);
-    navigate(`/${yearParam}/${countryParam}/${districtParam}`);
-    mutate();
+    navigate(`/${yearParam}/${countryParam}/${districtParam}`, {
+      state: `/${yearParam}/${countryParam}/${districtParam}`,
+    });
   };
 
-  /* const calculateData = sumProperties(allData, selectProperties); */
+  useEffect(() => {
+    if (
+      !isLoading
+      && message !== '查無資料'
+      && location.pathname !== '/'
+      && location.state === `/${yearParam}/${countryParam}/${districtParam}`
+    ) {
+      setFinalData(allProperties);
+    }
+
+    if (oldLocation !== location.key) {
+      setOldLocation(location.key);
+      window.location.reload();
+    }
+  }, [
+    allProperties,
+    countryParam,
+    districtParam,
+    oldLocation,
+    yearParam,
+    setFinalData,
+    isLoading,
+    message,
+    location,
+  ]);
+  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const peiChartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const options: Highcharts.Options = {
+    title: {
+      text: '人口數統計',
+    },
+    series: [
+      {
+        type: 'bar',
+        data: [1, 2, 3],
+      },
+    ],
+  };
+
+  const peiOptions: Highcharts.Options = {
+    title: {
+      text: '戶數統計',
+    },
+    series: [
+      {
+        type: 'pie',
+        data: [1, 2, 3],
+      },
+    ],
+  };
 
   return (
     <div className="px-48 w-full h-full min-h-fit">
@@ -70,6 +135,7 @@ function Search() {
       <Selector
         yearParam={yearParam}
         countryParam={countryParam}
+        districtParam={districtParam}
         setYearParam={setYearParam}
         setCountryParam={setCountryParam}
         setDistrictParam={setDistrictParam}
@@ -82,6 +148,23 @@ function Search() {
             搜尋結果
           </div>
         </span>
+      </div>
+      <div className="py-20 w-full">
+        <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
+          {finalData.title}
+        </h2>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          ref={chartComponentRef}
+        />
+
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={peiOptions}
+          ref={peiChartComponentRef}
+        />
+        <div>{finalData.household_ordinary_total}</div>
       </div>
     </div>
   );
