@@ -7,8 +7,7 @@
     "airbnb",
     "airbnb-typescript",
     "airbnb/hooks",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -23,8 +22,7 @@
   "plugins": [
     "react-refresh",
     "react",
-    "@typescript-eslint",
-    "prettier"
+    "@typescript-eslint"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -32,6 +30,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "react/no-unescaped-entities": "off"
+    "no-undef": "off",
+    "react/prop-types": 0
   }
 }

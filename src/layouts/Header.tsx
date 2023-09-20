@@ -1,6 +1,6 @@
 function Header() {
   return (
-    <div className="flex w-full h-12 items-center justify-between px-[16px] py-[10px] bg-[#651FFF] text-white header-shadow">
+    <div className="fixed top-0 flex w-full h-12 items-center justify-between px-[16px] py-[10px] bg-[#651FFF] text-white header-shadow">
       <div className="font-bold font-Ubuntu">LOGO</div>
       <button
         type="button"

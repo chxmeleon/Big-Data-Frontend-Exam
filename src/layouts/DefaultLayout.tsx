@@ -5,11 +5,8 @@ function DefaultLayout() {
   return (
     <main className="w-full h-screen">
       <Header />
-      <div className="flex justify-start w-full">
+      <div className="pt-12 flex justify-start w-full">
         <div className="relative w-[146px]">
-          {/* <div className="absolute rotate-90 left-0 top-0 origin-[0, 0] tracking-[18%] liner-gradient font-bold text-[200px] font-Ubuntu"> */}
-          {/*   TAIWAN */}
-          {/* </div> */}
           <div className="fixed top-14 left-0 w-full z-[-1]">
             <img src="brand.png" alt="" />
           </div>

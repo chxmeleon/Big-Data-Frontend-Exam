@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import DefaultLayout from './layout/DefaultLayout';
+import DefaultLayout from './layouts/DefaultLayout';
 import Search from './pages/Search';
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
       <Routes>
         <Route element={<DefaultLayout />}>
           <Route path="/" element={<Search />} />
+          <Route path="/:year?/:country?/:district?" element={<Search />} />
         </Route>
       </Routes>
     </BrowserRouter>
