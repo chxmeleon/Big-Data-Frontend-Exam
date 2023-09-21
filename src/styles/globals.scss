@@ -3,6 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+  overflow: hidden;
+}
+
+body {
+  position: absolute;
+  top: 52px;
+  bottom: 0;
+  width: 100%;
+  overflow: scroll;
+}
+
 .liner-gradient {
   background: linear-gradient(90deg, #e60000, #ffcc00, #007f00, #0000cc);
   -webkit-text-fill-color: transparent;
