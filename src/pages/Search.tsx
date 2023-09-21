@@ -33,10 +33,10 @@ function Search() {
   const { year, country, district } = useParams();
   const [yearParam, setYearParam] = useState<string | undefined>(year || '111');
   const [countryParam, setCountryParam] = useState<string | undefined>(
-    country || '',
+    country || '請選擇縣/市',
   );
   const [districtParam, setDistrictParam] = useState<string | undefined>(
-    district || '',
+    district || '請先選擇縣/市',
   );
   const [finalData, setFinalData] = useState<Record<string, number>>({});
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -76,31 +76,22 @@ function Search() {
     });
   };
 
-  useEffect(() => {
-    if (
-      !isLoading
-      && message !== '查無資料'
-      && location.pathname !== '/'
-      && location.state === `/${yearParam}/${countryParam}/${districtParam}`
-    ) {
-      setFinalData(allProperties);
-    }
+  /* useEffect(() => { */
+  /*   if ( */
+  /*     !isLoading */
+  /*     && message !== '查無資料' */
+  /*     && location.pathname !== '/' */
+  /*     && location.state === `/${yearParam}/${countryParam}/${districtParam}` */
+  /*   ) { */
+  /*     setFinalData(allProperties); */
+  /*   } */
+  /**/
+  /*   if (oldLocation !== location.key) { */
+  /*     setOldLocation(location.key); */
+  /*     window.location.reload(); */
+  /*   } */
+  /* }, [location, oldLocation, setFinalData, allProperties]); */
 
-    if (oldLocation !== location.key) {
-      setOldLocation(location.key);
-      window.location.reload();
-    }
-  }, [
-    allProperties,
-    countryParam,
-    districtParam,
-    oldLocation,
-    yearParam,
-    setFinalData,
-    isLoading,
-    message,
-    location,
-  ]);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const peiChartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const options: Highcharts.Options = {

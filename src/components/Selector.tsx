@@ -45,7 +45,7 @@ function Selector({
         onChange={(e) => setCountryParam(e.target.value)}
         defaultValue={countryParam}
       >
-        <option value="" selected>
+        <option value="請選擇 縣/市" selected>
           請選擇 縣/市
         </option>
         {data.contries.map((country) => (
@@ -59,10 +59,10 @@ function Selector({
         name="districts"
         id="districts"
         onChange={(e) => setDistrictParam(e.target.value)}
-        disabled={countryParam === '' || countryParam === undefined}
+        disabled={countryParam?.charAt(0) === '請'}
         defaultValue={districtParam}
       >
-        <option value="" selected>
+        <option value="請先選擇 縣/市" selected>
           請先選擇 縣/市
         </option>
         {data.districts[countryParam as string]?.map((district) => (
@@ -74,9 +74,14 @@ function Selector({
 
       <button
         type="submit"
-        className="py-2.5 px-4 font-bold rounded bg-black/10 text-black/25 font-Ubuntu"
+        className={cx(
+          districtParam?.charAt(0) === '請'
+            ? 'bg-black/10 text-black/25'
+            : 'bg-primary-100 text-white',
+          'py-2.5 px-4 font-bold rounded  font-Ubuntu',
+        )}
         onClick={handleClick}
-        disabled={districtParam === '' || districtParam === undefined}
+        disabled={districtParam?.charAt(0) === '請'}
       >
         SUBMIT
       </button>

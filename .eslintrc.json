@@ -7,7 +7,8 @@
     "airbnb",
     "airbnb-typescript",
     "airbnb/hooks",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -31,6 +32,7 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-function": "off",
     "no-undef": "off",
+    "no-console":0,
     "react/prop-types": 0
   }
 }
