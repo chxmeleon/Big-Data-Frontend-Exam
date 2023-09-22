@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { clsx as cx } from 'clsx';
-import { OptionsDataProps } from '../libs/data';
+import { IcTwotoneClose, MsArrowDropDown } from './Icons';
 
-type DropdownProps = {
+type SelectorProps = {
   options: string[];
   initialValue: string | undefined;
   onSelect: React.Dispatch<React.SetStateAction<string | undefined>>;
   size: 'small' | 'normal' | 'large';
   title: string;
+  isDisabled: boolean;
 };
 
 function Selector({
@@ -16,16 +17,12 @@ function Selector({
   onSelect,
   size,
   title,
-}: DropdownProps) {
-  const selectSytle = cx(
-    'border-2 py-1.5 px-2 text-[#333333] text-sm font-NotoSansTC font-normal',
-  );
-
+  isDisabled = false,
+}: SelectorProps) {
   const selectorSize = { small: 'w-20', normal: 'w-28', large: 'w-40' };
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
-    initialValue,
+    initialValue
   );
   const sidebarRef = useRef<HTMLDivElement>(null);
   const onCloseSide = () => setIsOpen(false);
@@ -37,6 +34,12 @@ function Selector({
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     onSelect(option);
+    setIsOpen(false);
+  };
+
+  const handleClearSelect = () => {
+    setSelectedOption('');
+    onSelect('');
     setIsOpen(false);
   };
 
@@ -61,30 +64,52 @@ function Selector({
       aria-hidden="true"
     >
       <div className="relative w-full" onClick={stopProp} aria-hidden="true">
-        <span className="absolute -top-1.5 left-3 px-1 text-xs text-center text-gray-500 bg-white">
+        <span
+          className={cx(
+            isDisabled ? 'text-gray-300/80' : 'text-gray-500',
+            'absolute -top-1.5 left-3 px-1 text-xs text-center  bg-white'
+          )}
+        >
           {title}
         </span>
-        <button
-          onClick={toggleDropdown}
-          type="button"
-          className="inline-flex justify-between p-3 w-full text-gray-700 bg-white rounded-md border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:border-primary-100"
+        <div
+          className={cx(
+            isDisabled
+              ? 'text-gray-300/80 border-gray-200 hover:cursor-not-allowed'
+              : 'text-gray-700 border-gray-300 hover:border-primary-100',
+            'inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm '
+          )}
           id="options-menu"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="options-menu"
         >
-          <p className="font-normal font-NotoSansTC">{selectedOption}</p>
-          <svg
-            className="ml-2 -mr-1 w-5 h-5"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path fill="currentColor" d="m12 15l-5-5h10l-5 5Z" />
-          </svg>
-        </button>
+          <p className="font-normal cursor-default font-NotoSansTC">
+            {selectedOption}
+          </p>
+          <div className="flex items-center">
+            {size === 'large' &&
+              selectedOption !== '' &&
+              selectedOption !== '請選擇縣/市' &&
+              selectedOption !== '請先選擇縣/市' && (
+                <button type="button" onClick={handleClearSelect}>
+                  <IcTwotoneClose />
+                </button>
+              )}
+            <button
+              type="button"
+              onClick={toggleDropdown}
+              disabled={isDisabled}
+            >
+              <MsArrowDropDown
+                className={cx(
+                  isDisabled ? '' : 'hover:text-primary-300',
+                  'ml-1 -mr-2 w-7 h-7 '
+                )}
+              />
+            </button>
+          </div>
+        </div>
 
         {isOpen && (
           <div className="overflow-y-auto absolute right-0 z-30 mt-0.5 w-full max-h-64 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right">

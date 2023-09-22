@@ -2,17 +2,18 @@ import { clsx as cx } from 'clsx';
 
 function Spinner({ size = 'md' }: { size: string }) {
   const sizeMapper: Record<string, string> = {
+    xs: 'w-6 h-6',
     sm: 'w-8 h-8',
     md: 'w-16 h-16',
-    lg: 'w-24 h-24',
+    lg: 'w-32 h-32',
   };
   return (
     <div role="status" className="flex justify-center">
       <svg
         aria-hidden="true"
         className={cx(
-          'inline text-gray-200 animate-spin fill-primary-200',
-          sizeMapper[size],
+          'inline text-gray-400 animate-spin fill-primary-200',
+          sizeMapper[size]
         )}
         viewBox="0 0 100 101"
         fill="none"

@@ -8,7 +8,7 @@ function App() {
       <Routes>
         <Route element={<DefaultLayout />}>
           <Route path="/" element={<Search />} />
-          <Route path="/:year?/:country?/:district?" element={<Search />} />
+          <Route path="/:year?/:city?/:district?" element={<Search />} />
         </Route>
       </Routes>
     </BrowserRouter>
