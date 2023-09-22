@@ -26,7 +26,7 @@ function Selector({
   };
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
-    initialValue
+    initialValue || ''
   );
   const sidebarRef = useRef<HTMLDivElement>(null);
   const onCloseSide = () => setIsOpen(false);
@@ -68,14 +68,6 @@ function Selector({
       aria-hidden="true"
     >
       <div className="relative w-full" onClick={stopProp} aria-hidden="true">
-        <span
-          className={cx(
-            isDisabled ? 'text-gray-300/80' : 'text-gray-500',
-            'absolute -top-1.5 left-3 px-1 text-xs text-center  bg-white'
-          )}
-        >
-          {title}
-        </span>
         <div
           className={cx(
             isDisabled
@@ -88,6 +80,16 @@ function Selector({
           aria-expanded="true"
           aria-labelledby="options-menu"
         >
+          <span
+            className={cx(
+              isDisabled
+                ? 'text-gray-300/80'
+                : 'text-gray-500 hover:text-primary-100',
+              'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white'
+            )}
+          >
+            {title}
+          </span>
           <p className="font-normal cursor-default font-NotoSansTC">
             {selectedOption}
           </p>

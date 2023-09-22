@@ -5,12 +5,10 @@ const useDebounced = (value: boolean, delay: number = 500) => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      console.log('new timeout');
       setDebouncedValue(value);
     }, delay);
 
     return () => {
-      console.log('clear timeout');
       clearTimeout(timeoutId);
     };
   }, [value, delay]);
