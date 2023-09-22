@@ -1,12 +1,12 @@
-type DataProps = {
-  contries: string[];
-  districts: { [key: string]: string[] };
+export type OptionsDataProps = {
+  years: string[];
+  cities: string[];
+  districts: Record<string, string[]>;
 };
 
-export const years = ['111', '110', '109', '108', '107', '106'];
-
-export const data: DataProps = {
-  contries: [
+export const optionsData: OptionsDataProps = {
+  years: ['111', '110', '109', '108', '107', '106'],
+  cities: [
     '台北市',
     '基隆市',
     '新北市',
@@ -55,7 +55,6 @@ export const data: DataProps = {
       '暖暖區',
       '七堵區',
     ],
-
     新北市: [
       '萬里區',
       '金山區',
@@ -87,7 +86,6 @@ export const data: DataProps = {
       '三芝區',
       '石門區',
     ],
-
     宜蘭縣: [
       '宜蘭市',
       '頭城鎮',
@@ -103,7 +101,6 @@ export const data: DataProps = {
       '南澳鄉',
       '釣魚台列嶼',
     ],
-
     桃園市: [
       '中壢區',
       '平鎮區',
@@ -119,9 +116,7 @@ export const data: DataProps = {
       '大園區',
       '蘆竹區',
     ],
-
     新竹市: ['東區', '北區', '香山區'],
-
     新竹縣: [
       '竹北市',
       '湖口鄉',
@@ -137,7 +132,6 @@ export const data: DataProps = {
       '北埔鄉',
       '峨眉鄉',
     ],
-
     苗栗縣: [
       '竹南鎮',
       '頭份市',
@@ -158,7 +152,6 @@ export const data: DataProps = {
       '西湖鄉',
       '卓蘭鎮',
     ],
-
     台中市: [
       '中區',
       '東區',
@@ -190,7 +183,6 @@ export const data: DataProps = {
       '外埔區',
       '大安區',
     ],
-
     彰化縣: [
       '彰化市',
       '芬園鄉',
@@ -219,7 +211,6 @@ export const data: DataProps = {
       '芳苑鄉',
       '二水鄉',
     ],
-
     南投縣: [
       '南投市',
       '中寮鄉',
@@ -235,9 +226,7 @@ export const data: DataProps = {
       '竹山鎮',
       '鹿谷鄉',
     ],
-
     嘉義市: ['東區', '西區'],
-
     嘉義縣: [
       '番路鄉',
       '梅山鄉',
@@ -319,7 +308,6 @@ export const data: DataProps = {
       '新市區',
       '安定區',
     ],
-
     高雄市: [
       '新興區',
       '前金區',

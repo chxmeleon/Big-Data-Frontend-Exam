@@ -3,23 +3,29 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import Selector from '../components/Selector';
+import Selectors from '../components/Selectors';
+import Chart from '../components/Chart';
+import Spinner from '../components/Spinner';
 
 const fetcher = (url: RequestInfo | URL) => fetch(url).then((r) => r.json());
 
-function sumProperties(
+const changeString = (str: string | undefined): string | undefined => (str?.includes('台') ? str.replace('台', '臺') : str);
+
+const snakeToCamel = (str: string): string => str.replace(/(_\w)/g, (k) => k[1].toUpperCase());
+
+const sumProperties = (
   objects: Record<string, number>[],
   propertiesToSum: string[],
-): Record<string, number> {
+): Record<string, number> => {
   const totalSum: Record<string, number> = {};
   propertiesToSum.forEach((prop) => {
-    totalSum[prop] = objects
+    totalSum[snakeToCamel(prop)] = objects
       ?.map((obj) => Number(obj[prop]))
       ?.reduce((acc, val) => acc + val, 0);
   });
 
   return totalSum;
-}
+};
 
 function Search() {
   const {
@@ -35,17 +41,14 @@ function Search() {
   const [district, setDistrict] = useState<string | undefined>(
     paramDistrict || '請先選擇縣/市',
   );
-  const [isSubmited, setIsSubmited] = useState<boolean>(false);
-
-  const changeString = (str: string | undefined): string | undefined => (str?.includes('台') ? str.replace('台', '臺') : str);
 
   const endpoint = import.meta.env.VITE_API_ENDPOINT;
 
-  const apiPath = `${endpoint}/${year}?COUNTY=${changeString(
-    country,
-  )}&TOWN=${changeString(district)}`;
+  const apiPath = `${endpoint}/${paramYear}?COUNTY=${changeString(
+    paramCountry,
+  )}&TOWN=${changeString(paramDistrict)}`;
 
-  const { data: searchData, isLoading, mutate } = useSWR(apiPath, fetcher);
+  const { data: searchData, isLoading } = useSWR(apiPath, fetcher);
 
   const allData = searchData?.responseData;
   const message = searchData?.responseMessage;
@@ -58,31 +61,26 @@ function Search() {
     'household_ordinary_f',
   ];
 
-  const allProperties = Object.assign(
-    sumProperties(allData, selectProperties),
-    { title: `${year}年 ${country} ${district}` },
-  );
+  const finalData = sumProperties(allData, selectProperties);
+  console.log(finalData);
 
-  const [finalData, setFinalData] = useState<Record<string, number>>({});
-
-  const location = useLocation();
   const navigate = useNavigate();
   const hanleClick = () => {
-    setFinalData(allProperties);
-    setIsSubmited(true);
     navigate(`/${year}/${country}/${district}`, {
       state: `/${year}/${country}/${district}`,
     });
   };
 
-  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const peiChartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const options: Highcharts.Options = {
+  const columnOptions: Highcharts.Options = {
+    accessibility: {
+      enabled: false,
+    },
     credits: {
       enabled: false,
     },
     chart: {
       height: 650,
+      backgroundColor: 'transparent',
     },
     title: {
       text: '人口數統計',
@@ -122,29 +120,47 @@ function Search() {
       {
         name: '男',
         type: 'column',
-        data: [finalData.household_single_m, finalData.household_ordinary_m],
+        data: [finalData.householdSingleM, finalData.householdOrdinaryM],
         color: '#7960AD',
       },
       {
         name: '女',
         type: 'column',
-        data: [finalData.household_single_f, finalData.household_ordinary_f],
+        data: [finalData.householdSingleF, finalData.householdOrdinaryF],
         color: '#AD8AF8',
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            chart: {
+              height: 400,
+            },
+          },
+        },
+      ],
+    },
   };
 
-  const singleTotalPercent = finalData.household_single_total
-    / (finalData.household_single_total + finalData.household_ordinary_total);
-  const ordinaryTotalPercent = finalData.household_ordinary_total
-    / (finalData.household_single_total + finalData.household_ordinary_total);
+  const singleTotalPercent = finalData.householdSingleTotal
+    / (finalData.householdSingleTotal + finalData.householdOrdinaryTotal);
+  const ordinaryTotalPercent = finalData.householdOrdinaryTotal
+    / (finalData.householdSingleTotal + finalData.householdOrdinaryTotal);
 
   const peiOptions: Highcharts.Options = {
+    accessibility: {
+      enabled: false,
+    },
     credits: {
       enabled: false,
     },
     chart: {
       height: 650,
+      backgroundColor: 'transparent',
     },
     title: {
       text: '戶數統計',
@@ -185,51 +201,51 @@ function Search() {
         ],
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            chart: {
+              height: 400,
+            },
+          },
+        },
+      ],
+    },
   };
 
   return (
-    <div className="px-48 w-full h-full">
+    <div className="px-2 w-full h-full md:px-48 md:bg-transparent bg-white/80">
       <h1 className="py-4 mb-5 font-normal text-center text-[32px] font-NotoSansTC">
         人口數、戶數按戶別及性別統計
       </h1>
-      <Selector
-        yearParam={year}
-        countryParam={country}
-        districtParam={district}
-        setYearParam={setYear}
-        setCountryParam={setCountry}
-        setDistrictParam={setDistrict}
-        handleClick={hanleClick}
-      />
+      <Selectors />
       <div className="inline-flex justify-center items-center pt-9 w-full">
-        <hr className="w-full h-[1px] bg-[#C29FFF] border-0" />
-        <span className="absolute left-1/2 bg-white w-[98px]">
-          <div className="text-[13px] font-medium mx-[10px] px-3 py-2 border rounded-full border-[#C29FFF] text-[#C29FFF] text-center">
+        <hr className="w-full border-0 h-[1px] bg-secondary-300" />
+        <span className="absolute left-[37.6%] md:left-[46.6%] bg-white w-[98px]">
+          <div className="py-2 px-3 font-medium text-center rounded-full border text-[13px] mx-[10px] border-secondary-300 text-secondary-300">
             搜尋結果
           </div>
         </span>
       </div>
 
-      {location.pathname !== '/' ? (
-        <div className="py-16 w-full">
+      {message === '處理完成' ? (
+        <div className="py-10 w-full md:py-16">
           <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
-            {finalData.title}
+            {paramYear}
+            年
+            {paramCountry}
+            {' '}
+            {paramDistrict}
           </h2>
-          <div className="pt-20">
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-              ref={chartComponentRef}
-            />
-          </div>
-          <div className="pt-20">
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={peiOptions}
-              ref={peiChartComponentRef}
-            />
-          </div>
+          <Chart options={columnOptions} />
+          <Chart options={peiOptions} />
         </div>
+      ) : isLoading ? (
+        <Spinner size="md" />
       ) : null}
     </div>
   );

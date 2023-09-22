@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 function Header() {
   return (
-    <header className="fixed z-50 top-0 left-0 w-full h-12">
+    <header className="fixed top-0 left-0 z-50 w-full h-12">
       <div className="flex items-center justify-between px-[16px] py-[10px] bg-[#651FFF] text-white header-shadow">
-        <Link to="/" className="font-bold font-Ubuntu">
+        <Link to="/" reloadDocument className="font-bold font-Ubuntu">
           LOGO
         </Link>
         <button
