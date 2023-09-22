@@ -19,7 +19,11 @@ function Selector({
   title,
   isDisabled = false,
 }: SelectorProps) {
-  const selectorSize = { small: 'w-20', normal: 'w-28', large: 'w-40' };
+  const selectorSize = {
+    small: 'w-20',
+    normal: 'w-28',
+    large: 'w-full md:w-40',
+  };
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     initialValue

@@ -251,7 +251,7 @@ function Search() {
   };
 
   return (
-    <div className="px-2 w-full h-full md:px-48 md:bg-transparent bg-white/80">
+    <div className="px-2 w-full h-[calc(100vh-3.8rem)] md:h-full 2xl:max-w-7xl md:px-6 lg:px-48 lg:bg-transparent bg-white/80">
       {isLoadingData && paramYear !== undefined ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">
@@ -260,11 +260,11 @@ function Search() {
           </div>
         </div>
       ) : (
-        <>
+        <div className="w-full">
           <h1 className="py-4 mb-5 font-normal text-center text-[32px] font-NotoSansTC">
             人口數、戶數按戶別及性別統計
           </h1>
-          <div className="flex gap-4 py-2 mb-4 w-full md:justify-center md:items-center md:h-12">
+          <div className="flex flex-col md:flex-row gap-4 py-2 mb-4  w-full md:justify-center md:items-center md:h-12">
             <Selector
               size="small"
               options={optionsData.years}
@@ -295,7 +295,7 @@ function Search() {
                 isButtonDisabled
                   ? 'bg-black/10 text-black/25'
                   : 'bg-primary-100 text-white',
-                'w-24 h-12 py-2.5 font-bold rounded inline-flex justify-center items-center font-Ubuntu'
+                'w-full md:w-24 h-12 py-2.5 font-bold rounded inline-flex justify-center items-center font-Ubuntu'
               )}
               onClick={handleClick}
               disabled={isButtonDisabled}
@@ -312,15 +312,14 @@ function Search() {
               )}
             </button>
           </div>
-          <div className="inline-flex justify-center items-center pt-9 w-full">
+          <div className="relative inline-flex justify-center items-center pt-9 w-full">
             <hr className="w-full border-0 h-[1px] bg-secondary-300" />
-            <span className="absolute left-[37.6%] md:left-[46.6%] bg-white w-[98px]">
+            <span className="absolute left-1/2 -translate-x-14 bg-white w-[98px]">
               <div className="py-2 px-3 font-medium text-center rounded-full border text-[13px] mx-[10px] border-secondary-300 text-secondary-300">
                 搜尋結果
               </div>
             </span>
           </div>
-
           {message === '處理完成' ? (
             <div className="py-10 w-full md:py-16">
               <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
@@ -336,7 +335,7 @@ function Search() {
               </h2>
             </div>
           ) : null}
-        </>
+        </div>
       )}
     </div>
   );
