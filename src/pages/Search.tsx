@@ -73,7 +73,7 @@ function Search() {
   const checkMessage = checkState?.responseMessage;
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
-  const isLoadingData = useDebounced(isLoading, 1400);
+  const isLoadingData = useDebounced(isLoading, 1200);
 
   useEffect(() => {
     if (
@@ -328,6 +328,12 @@ function Search() {
               </h2>
               <Chart options={columnOptions} />
               <Chart options={pieOptions} />
+            </div>
+          ) : message === '查無資料' && paramYear !== undefined ? (
+            <div className="py-10 w-full md:py-16">
+              <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
+                查無資料
+              </h2>
             </div>
           ) : null}
         </>
