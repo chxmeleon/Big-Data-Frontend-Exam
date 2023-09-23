@@ -8,8 +8,7 @@
     "airbnb-typescript",
     "airbnb/hooks",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -23,8 +22,7 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint",
-    "prettier"
+    "@typescript-eslint"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -35,7 +33,18 @@
     "react/jsx-props-no-spreading": "off",
     "no-nested-ternary": "off",
     "no-undef": "off",
-    "no-console": 0,
-    "react/prop-types": 0
+    "no-console": "off",
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": [
+          "function-declaration",
+          "arrow-function"
+        ],
+        "unnamedComponents": "arrow-function"
+      }
+    ]
   }
 }

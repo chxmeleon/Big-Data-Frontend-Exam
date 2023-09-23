@@ -31,11 +31,13 @@ function Search() {
 
   const [year, setYear] = useState<string | undefined>(paramYear || '111');
   const [city, setCity] = useState<string | undefined>(
-    paramCity || '請選擇縣/市'
+    paramCity || '請選擇 縣/市',
   );
   const [district, setDistrict] = useState<string | undefined>(
-    paramDistrict || '請先選擇縣/市'
+    paramDistrict || '請先選擇 縣/市',
   );
+  const [oldCity, setOldCity] = useState<string | undefined>(city);
+  const isSameCity = oldCity === city;
 
   const navigate = useNavigate();
   const handleClick = () => {
@@ -43,11 +45,12 @@ function Search() {
   };
 
   const endpoint = import.meta.env.VITE_API_ENDPOINT;
-  const requestApiPath = useMemo(() => {
-    return `${endpoint}/${paramYear}?COUNTY=${changeString(
-      paramCity
-    )}&TOWN=${changeString(paramDistrict)}`;
-  }, [endpoint, paramYear, paramCity, paramDistrict]);
+  const requestApiPath = useMemo(
+    () => `${endpoint}/${paramYear}?COUNTY=${changeString(
+      paramCity,
+    )}&TOWN=${changeString(paramDistrict)}`,
+    [endpoint, paramYear, paramCity, paramDistrict],
+  );
 
   const {
     data: searchData,
@@ -55,19 +58,16 @@ function Search() {
     error,
   } = useSWR<ApiResponse>(requestApiPath, fetcher);
 
-  /* const apiPath = `${endpoint}/111`; */
-  /* const { data: logData } = useSWR<ApiResponse>(apiPath, fetcher); */
-  /* console.log(logData); */
-
-  const checkResponseApiPath = useMemo(() => {
-    return `${endpoint}/${year}?COUNTY=${changeString(
-      city
-    )}&TOWN=${changeString(district)}`;
-  }, [endpoint, year, city, district]);
+  const checkResponseApiPath = useMemo(
+    () => `${endpoint}/${year}?COUNTY=${changeString(city)}&TOWN=${changeString(
+      district,
+    )}`,
+    [endpoint, year, city, district],
+  );
 
   const { data: checkState } = useSWR<ApiResponse>(
     checkResponseApiPath,
-    fetcher
+    fetcher,
   );
 
   const checkMessage = checkState?.responseMessage;
@@ -76,10 +76,10 @@ function Search() {
 
   useEffect(() => {
     if (
-      checkMessage !== '處理完成' ||
-      district === undefined ||
-      district === '' ||
-      city === ''
+      checkMessage !== '處理完成'
+      || district === undefined
+      || district === ''
+      || city === ''
     ) {
       setIsButtonDisabled(true);
     } else {
@@ -101,20 +101,20 @@ function Search() {
   ]);
   const singleTotalPercent = calcPercentFromTwoValue(
     finalData.householdSingleTotal,
-    finalData.householdOrdinaryTotal
+    finalData.householdOrdinaryTotal,
   );
   const ordinaryTotalPercent = calcPercentFromTwoValue(
     finalData.householdOrdinaryTotal,
-    finalData.householdSingleTotal
+    finalData.householdSingleTotal,
   );
   const columnOptions = generateColumnChartOptions(finalData);
   const pieOptions = generatePieChartOptions(
     singleTotalPercent,
-    ordinaryTotalPercent
+    ordinaryTotalPercent,
   );
 
   return (
-    <div className="px-2 w-full h-[calc(100vh-3.8rem)] md:h-full 2xl:max-w-7xl md:px-6 lg:px-48 lg:bg-transparent bg-white/80">
+    <div className="px-2 w-full h-full md:px-6 lg:px-48 2xl:max-w-7xl bg-white/80">
       {isLoadingData && paramYear !== undefined ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">
@@ -124,7 +124,7 @@ function Search() {
         </div>
       ) : (
         <div className="w-full">
-          <h1 className="py-4 mb-5 font-normal text-center text-[32px] font-NotoSansTC">
+          <h1 className="py-4 mb-5 text-2xl font-normal text-center font-NotoSansTC md:text-[32px]">
             人口數、戶數按戶別及性別統計
           </h1>
           <div className="flex flex-col gap-4 py-2 mb-4 w-full md:flex-row md:justify-center md:items-center md:h-12">
@@ -134,7 +134,6 @@ function Search() {
               initialValue={year}
               onSelect={setYear}
               title="年份"
-              isDisabled={false}
             />
             <Selector
               size="large"
@@ -142,7 +141,6 @@ function Search() {
               initialValue={city}
               onSelect={setCity}
               title="縣/市"
-              isDisabled={false}
             />
             <Selector
               size="large"
@@ -150,20 +148,24 @@ function Search() {
               initialValue={district}
               onSelect={setDistrict}
               title="區"
-              isDisabled={city === '請選擇縣/市'}
+              isDisabled={
+                city === '請選擇 縣/市' || city === '' || city === undefined
+              }
+              selectedCity={city}
+              isRelative
             />
             <button
               type="submit"
               className={cx(
                 isButtonDisabled
-                  ? 'bg-black/10 text-black/25'
+                  ? 'bg-neutral-200 text-black/25'
                   : 'bg-primary-100 text-white',
-                'w-full md:w-24 h-12 py-2.5 font-bold rounded inline-flex justify-center items-center font-Ubuntu'
+                ' w-full md:w-24 h-12 py-2.5 font-bold rounded inline-flex justify-center items-center font-Ubuntu',
               )}
               onClick={handleClick}
               disabled={isButtonDisabled}
             >
-              {isButtonDisabled && district !== '請先選擇縣/市' ? (
+              {isButtonDisabled && district !== '請先選擇 縣/市' ? (
                 <div className="relative">
                   <span className="text-center">SUBMIT</span>
                   {message !== '查無資料' && (
@@ -188,7 +190,11 @@ function Search() {
           {message === '處理完成' ? (
             <div className="py-10 w-full md:py-16">
               <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
-                {paramYear}年 {paramCity} {paramDistrict}
+                {paramYear}
+                年
+                {paramCity}
+                {' '}
+                {paramDistrict}
               </h2>
               <Chart options={columnOptions} />
               <Chart options={pieOptions} />

@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { clsx as cx } from 'clsx';
 import { IcTwotoneClose, MsArrowDropDown } from './Icons';
 
-type SelectorProps = {
+export type SelectorProps = {
   options: string[];
   initialValue: string | undefined;
   onSelect: React.Dispatch<React.SetStateAction<string | undefined>>;
   size: 'small' | 'normal' | 'large';
   title: string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
+  isRelative?: boolean;
+  selectedCity?: string;
 };
 
 function Selector({
@@ -18,15 +20,20 @@ function Selector({
   size,
   title,
   isDisabled = false,
+  isRelative = false,
+  selectedCity,
 }: SelectorProps) {
   const selectorSize = {
     small: 'w-20',
     normal: 'w-28',
-    large: 'w-full md:w-40',
+    large: 'w-full md:w-48',
   };
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
-    initialValue || ''
+    initialValue || '',
+  );
+  const [oldSelectedCity, setOldSelectedCity] = useState<string | undefined>(
+    selectedCity,
   );
   const sidebarRef = useRef<HTMLDivElement>(null);
   const onCloseSide = () => setIsOpen(false);
@@ -44,7 +51,6 @@ function Selector({
   const handleClearSelect = () => {
     setSelectedOption('');
     onSelect('');
-    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -60,6 +66,24 @@ function Selector({
     };
   }, [sidebarRef, isOpen]);
 
+  useEffect(() => {
+    if (isRelative) {
+      setOldSelectedCity(selectedCity);
+    }
+
+    if (oldSelectedCity !== selectedCity && isRelative) {
+      if (selectedCity === '') {
+        setSelectedOption('請先選擇 縣/市');
+        onSelect('');
+      } else {
+        setTimeout(() => {
+          setSelectedOption(options[0]);
+          onSelect(options[0]);
+        }, 100);
+      }
+    }
+  }, [selectedCity, isRelative, oldSelectedCity, onSelect, options]);
+
   return (
     <div
       ref={sidebarRef}
@@ -73,7 +97,7 @@ function Selector({
             isDisabled
               ? 'text-gray-300/80 border-gray-200 hover:cursor-not-allowed'
               : 'text-gray-700 border-gray-300 hover:border-primary-100',
-            'inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm '
+            'inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm ',
           )}
           id="options-menu"
           aria-haspopup="listbox"
@@ -85,7 +109,7 @@ function Selector({
               isDisabled
                 ? 'text-gray-300/80'
                 : 'text-gray-500 hover:text-primary-100',
-              'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white'
+              'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white',
             )}
           >
             {title}
@@ -94,14 +118,14 @@ function Selector({
             {selectedOption}
           </p>
           <div className="flex items-center">
-            {size === 'large' &&
-              selectedOption !== '' &&
-              selectedOption !== '請選擇縣/市' &&
-              selectedOption !== '請先選擇縣/市' && (
+            {size === 'large'
+              && selectedOption !== ''
+              && selectedOption !== '請選擇 縣/市'
+              && selectedOption !== '請先選 擇縣/市' && (
                 <button type="button" onClick={handleClearSelect}>
                   <IcTwotoneClose />
                 </button>
-              )}
+            )}
             <button
               type="button"
               onClick={toggleDropdown}
@@ -110,7 +134,7 @@ function Selector({
               <MsArrowDropDown
                 className={cx(
                   isDisabled ? '' : 'hover:text-primary-300',
-                  'ml-1 -mr-2 w-7 h-7 '
+                  'ml-1 -mr-2 w-7 h-7 ',
                 )}
               />
             </button>
@@ -125,7 +149,7 @@ function Selector({
               aria-orientation="vertical"
               aria-labelledby="options-menu"
             >
-              {options.map((option) => (
+              {options?.map((option) => (
                 <div
                   key={option}
                   onClick={() => handleOptionClick(option)}
