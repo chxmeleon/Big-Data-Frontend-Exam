@@ -29,9 +29,8 @@ function Result({
         </div>
         <hr className="flex-grow border-0 h-[1px] bg-secondary-300" />
       </div>
-
       {isProcessing ? (
-        <div className="flex flex-col justify-center items-center pt-48 pr-3">
+        <div className="flex flex-col justify-center items-center pt-[12.6rem] pr-3">
           <Spinner size="lg" />
           <h1 className="py-10 text-3xl">載入中...</h1>
         </div>
