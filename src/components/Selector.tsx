@@ -11,6 +11,7 @@ export type SelectorProps = {
   isDisabled?: boolean;
   isRelative?: boolean;
   selectedCity?: string;
+  isAutoDistrict?: boolean;
 };
 
 function Selector({
@@ -21,6 +22,7 @@ function Selector({
   title,
   isDisabled = false,
   isRelative = false,
+  isAutoDistrict = false,
   selectedCity,
 }: SelectorProps) {
   const selectorSize = {
@@ -50,6 +52,8 @@ function Selector({
     onSelect('');
   };
 
+  const randomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!sidebarRef.current?.contains(e.target as Node | null)) {
@@ -67,12 +71,16 @@ function Selector({
     if (isRelative) {
       if (selectedCity === '' || selectedCity === '請選擇 縣/市') {
         setSelectedOption('請先選擇 縣/市');
+      } else if (isAutoDistrict) {
+        const randomOption = options[randomNumber(0, options?.length || 1 - 1)];
+        setSelectedOption(randomOption);
+        onSelect(randomOption);
       } else {
         setSelectedOption('');
+        onSelect('');
       }
-      onSelect('');
     }
-  }, [selectedCity, isRelative, onSelect]);
+  }, [selectedCity, isRelative, isAutoDistrict, onSelect, options]);
 
   return (
     <div
@@ -98,7 +106,7 @@ function Selector({
                   isDisabled
                     ? 'text-gray-300/80'
                     : 'text-gray-700 hover:text-tertiary-200',
-                  'absolute right-10 top-[36%] z-[1]',
+                  'absolute right-10 top-[1.18rem] z-[1]',
                 )}
               >
                 <IcTwotoneClose />

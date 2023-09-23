@@ -1,11 +1,11 @@
 import { clsx as cx } from 'clsx';
+import { useEffect, useState } from 'react';
 import Selector from './Selector';
 import Spinner from './Spinner';
 import { optionsData } from '../libs/data';
-import checkInitailValue from '../utils/checkInitialValue';
+import useDebounced from '../hooks/useDebounced';
 
 export interface SelectorsProps {
-  isButtonDisabled: boolean;
   message: string | undefined;
   year: string | undefined;
   setYear: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -17,7 +17,6 @@ export interface SelectorsProps {
 }
 
 function Selectors({
-  isButtonDisabled,
   message,
   year,
   setYear,
@@ -27,6 +26,16 @@ function Selectors({
   setDistrict,
   handleClick,
 }: SelectorsProps) {
+  const [hasAutoDistrict, setHasAutoDistrict] = useState<boolean>(true);
+  const onToggleAutoDistrict = () => {
+    setHasAutoDistrict((prev) => !prev);
+  };
+
+  const isButtonDisabled = district === undefined
+    || district === ''
+    || city === ''
+    || year === undefined;
+
   return (
     <>
       <h1 className="pb-14 text-2xl font-normal text-center font-NotoSansTC md:text-[32px]">
@@ -36,28 +45,27 @@ function Selectors({
         <Selector
           size="small"
           options={optionsData.years}
-          initialValue={checkInitailValue(year, 'year')}
+          initialValue={year}
           onSelect={setYear}
           title="年份"
         />
         <Selector
           size="large"
           options={optionsData.cities}
-          initialValue={checkInitailValue(city, 'city')}
+          initialValue={city}
           onSelect={setCity}
           title="縣/市"
         />
         <Selector
           size="large"
           options={optionsData.districts[city as string]}
-          initialValue={checkInitailValue(district, 'district')}
+          initialValue={district}
           onSelect={setDistrict}
           title="區"
-          isDisabled={
-            city === '請選擇 縣/市' || city === '' || city === undefined
-          }
+          isDisabled={useDebounced(!optionsData.cities.includes(city || ''), 5)}
           selectedCity={city}
           isRelative
+          isAutoDistrict={hasAutoDistrict}
         />
         <button
           type="submit"
@@ -83,6 +91,22 @@ function Selectors({
             <span>SUBMIT</span>
           )}
         </button>
+      </div>
+      <div className="flex justify-center pl-[11.66rem]">
+        <div className="inline-flex gap-3 justify-between items-center">
+          <button
+            type="button"
+            onClick={onToggleAutoDistrict}
+            aria-label="switch-auto-district"
+            className={cx(
+              hasAutoDistrict
+                ? 'bg-secondary-100 border-primary-100'
+                : 'bg-tertiary-300/50 border-primary-100',
+              'p-2 rounded border',
+            )}
+          />
+          <p className="text-xs text-gray-700">區 選項自動補全</p>
+        </div>
       </div>
     </>
   );

@@ -11,9 +11,10 @@ import {
   generatePieChartOptions,
   sumProperties,
 } from '../utils';
-import useBtnEnable from '../hooks/useBtnEnable';
 import Chart from '../components/Chart';
 import Result, { ResultProps } from '../components/Result';
+import checkInitailValue from '../utils/checkInitialValue';
+import { optionsData } from '../libs/data';
 
 interface ApiResponse {
   responseData: Record<string, number>[];
@@ -30,12 +31,14 @@ function Search() {
   } = useParams();
 
   const navigate = useNavigate();
-  const [year, setYear] = useState<string | undefined>(paramYear || '111');
+  const [year, setYear] = useState<string | undefined>(
+    checkInitailValue(paramYear, 'year'),
+  );
   const [city, setCity] = useState<string | undefined>(
-    paramCity || '請選擇 縣/市',
+    checkInitailValue(paramCity, 'city'),
   );
   const [district, setDistrict] = useState<string | undefined>(
-    paramDistrict || '請先選擇 縣/市',
+    checkInitailValue(paramDistrict, 'district'),
   );
 
   const endpoint = import.meta.env.VITE_API_ENDPOINT;
@@ -83,10 +86,6 @@ function Search() {
   ]);
 
   const selectorsProps: SelectorsProps = {
-    isButtonDisabled: useBtnEnable(
-      { city, district },
-      checkState?.responseMessage,
-    ),
     message,
     year,
     setYear,
