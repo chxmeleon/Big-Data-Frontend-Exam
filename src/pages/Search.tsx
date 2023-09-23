@@ -176,13 +176,12 @@ function Search() {
               )}
             </button>
           </div>
-          <div className="inline-flex relative justify-center items-center pt-9 w-full">
-            <hr className="w-full border-0 h-[1px] bg-secondary-300" />
-            <span className="absolute left-1/2 bg-white -translate-x-14 w-[98px]">
-              <div className="py-2 px-3 font-medium text-center rounded-full border text-[13px] mx-[10px] border-secondary-300 text-secondary-300">
-                搜尋結果
-              </div>
-            </span>
+          <div className="inline-flex relative justify-between items-center pt-9 w-full">
+            <hr className="flex-grow border-0 h-[1px] bg-secondary-300" />
+            <div className="w-24 py-2 px-3 font-medium text-center rounded-full border text-[13px] mx-[10px] border-secondary-300 text-secondary-300">
+              搜尋結果
+            </div>
+            <hr className="flex-grow border-0 h-[1px] bg-secondary-300" />
           </div>
           {message === '處理完成' ? (
             <div className="py-10 w-full md:py-16">

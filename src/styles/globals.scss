@@ -14,6 +14,7 @@ body {
   bottom: 0;
   width: 100%;
   overflow: scroll;
+  overscroll-behavior: none;
 }
 
 .liner-gradient {
