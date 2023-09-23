@@ -2,6 +2,7 @@ import { clsx as cx } from 'clsx';
 import Selector from './Selector';
 import Spinner from './Spinner';
 import { optionsData } from '../libs/data';
+import checkInitailValue from '../utils/checkInitialValue';
 
 export interface SelectorsProps {
   isButtonDisabled: boolean;
@@ -35,21 +36,21 @@ function Selectors({
         <Selector
           size="small"
           options={optionsData.years}
-          initialValue={year}
+          initialValue={checkInitailValue(year, 'year')}
           onSelect={setYear}
           title="年份"
         />
         <Selector
           size="large"
           options={optionsData.cities}
-          initialValue={city}
+          initialValue={checkInitailValue(city, 'city')}
           onSelect={setCity}
           title="縣/市"
         />
         <Selector
           size="large"
           options={optionsData.districts[city as string]}
-          initialValue={district}
+          initialValue={checkInitailValue(district, 'district')}
           onSelect={setDistrict}
           title="區"
           isDisabled={

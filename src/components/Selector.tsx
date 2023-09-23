@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { clsx as cx } from 'clsx';
 import { IcTwotoneClose, MsArrowDropDown } from './Icons';
+import { optionsData } from '../libs/data';
 
 export type SelectorProps = {
   options: string[];
@@ -40,6 +41,25 @@ function Selector({
   const stopProp = (e: React.MouseEvent) => e.stopPropagation();
   const toggleDropdown = () => {
     setIsOpen((prevValue) => !prevValue);
+  };
+
+  const checkInitailValue = (str: string | undefined, key: string) => {
+    const optionsFlattenArray = [
+      ...optionsData.years,
+      ...optionsData.cities,
+      ...Object.values(optionsData.districts).flat(),
+    ];
+
+    const initailValue: Record<string, string> = {
+      year: '111',
+      city: '請選擇 縣/市',
+      district: '請先選擇 縣/市',
+    };
+
+    if (!optionsFlattenArray.includes(str || '')) {
+      return initailValue[key];
+    }
+    return str;
   };
 
   const handleOptionClick = (option: string) => {
