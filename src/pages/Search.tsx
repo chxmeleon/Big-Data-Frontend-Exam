@@ -114,7 +114,7 @@ function Search() {
   );
 
   return (
-    <div className="px-2 w-full h-full md:px-6 lg:px-48 2xl:max-w-7xl bg-white/80">
+    <div className="px-2 w-full h-full md:px-6 lg:px-48  bg-white/80">
       {isLoadingData && paramYear !== undefined ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">
