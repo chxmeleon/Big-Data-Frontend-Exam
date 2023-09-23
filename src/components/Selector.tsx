@@ -96,54 +96,62 @@ function Selector({
       aria-hidden="true"
     >
       <div className="relative w-full" onClick={stopProp} aria-hidden="true">
-        <div
-          className={cx(
-            isDisabled
-              ? 'text-gray-300/80 border-gray-200 hover:cursor-not-allowed'
-              : 'text-gray-700 border-gray-300 hover:border-primary-100',
-            'inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm ',
+        <div>
+          {size === 'large'
+            && selectedOption !== ''
+            && selectedOption !== '請選擇 縣/市'
+            && selectedOption !== '請先選 擇縣/市' && (
+              <button
+                type="button"
+                onClick={handleClearSelect}
+                className={cx(
+                  isDisabled
+                    ? 'text-gray-300/80'
+                    : 'text-gray-700 hover:text-tertiary-200',
+                  'absolute right-10 top-[36%] z-[1]',
+                )}
+              >
+                <IcTwotoneClose />
+              </button>
           )}
-        >
-          <span
+          <button
+            type="button"
+            onClick={toggleDropdown}
+            disabled={isDisabled}
             className={cx(
               isDisabled
-                ? 'text-gray-300/80'
-                : 'text-gray-500 hover:text-primary-100',
-              'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white',
+                ? 'text-gray-300/80 border-gray-200 hover:cursor-not-allowed'
+                : 'text-gray-700 border-gray-300 hover:border-primary-100',
+              'relative inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm hover:text-primary-100',
             )}
           >
-            {title}
-          </span>
-          <p
-            className={cx(
-              isDisabled ? 'cursor-not-allowed' : 'cursor-default',
-              'font-normal   font-NotoSansTC',
-            )}
-          >
-            {selectedOption}
-          </p>
-          <div className="flex items-center">
-            {size === 'large'
-              && selectedOption !== ''
-              && selectedOption !== '請選擇 縣/市'
-              && selectedOption !== '請先選 擇縣/市' && (
-                <button type="button" onClick={handleClearSelect}>
-                  <IcTwotoneClose />
-                </button>
-            )}
-            <button
-              type="button"
-              onClick={toggleDropdown}
-              disabled={isDisabled}
+            <span
+              className={cx(
+                isDisabled ? 'text-gray-300/80' : 'hover:text-primary-100',
+                'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white',
+              )}
             >
+              {title}
+            </span>
+            <p
+              className={cx(
+                isDisabled
+                  ? 'cursor-not-allowed text-gray-300/80'
+                  : 'text-gray-700 cursor-default',
+                'font-normal   font-NotoSansTC',
+              )}
+            >
+              {selectedOption}
+            </p>
+            <div className="flex items-center">
               <MsArrowDropDown
                 className={cx(
                   isDisabled ? '' : 'hover:text-primary-300',
                   'ml-1 -mr-2 w-7 h-7 ',
                 )}
               />
-            </button>
-          </div>
+            </div>
+          </button>
         </div>
 
         {isOpen && (

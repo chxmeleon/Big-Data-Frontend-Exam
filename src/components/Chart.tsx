@@ -6,7 +6,7 @@ function Chart({ options }: { options: Highcharts.Options }) {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   return (
-    <div className="pt-8 md:pt-20">
+    <div className="py-8 md:py-10">
       <HighchartsReact
         highcharts={Highcharts}
         options={options}

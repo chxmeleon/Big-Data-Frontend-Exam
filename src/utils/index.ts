@@ -32,16 +32,17 @@ export const generateColumnChartOptions = (
     enabled: false,
   },
   chart: {
-    height: 650,
+    height: 600,
     backgroundColor: 'transparent',
   },
   title: {
     text: '人口數統計',
     style: {
-      fontSize: '32px',
+      fontSize: '22px',
       fontFamily: 'Noto Sans TC',
       fontWeight: '400',
     },
+    margin: 20,
   },
   tooltip: {
     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -61,7 +62,7 @@ export const generateColumnChartOptions = (
       x: -20,
       y: -10,
       style: {
-        fontSize: '20px',
+        fontSize: '18px',
       },
     },
   },
@@ -75,9 +76,9 @@ export const generateColumnChartOptions = (
       offset: 0,
       margin: 0,
       y: -24,
-      x: -50,
+      x: -40,
       style: {
-        fontSize: '20px',
+        fontSize: '18px',
       },
     },
   },
@@ -123,13 +124,13 @@ export const generatePieChartOptions = (
     enabled: false,
   },
   chart: {
-    height: 650,
+    height: 600,
     backgroundColor: 'transparent',
   },
   title: {
     text: '戶數統計',
     style: {
-      fontSize: '32px',
+      fontSize: '22px',
       fontFamily: 'Noto Sans TC',
       fontWeight: '400',
     },

@@ -111,7 +111,7 @@ function Search() {
   );
 
   return (
-    <div className="px-2 w-full h-full md:px-6 lg:px-48  bg-white/80">
+    <div className="px-2 w-full h-full md:px-6 lg:px-48 lg:bg-transparent bg-white/80">
       {isLoadingData && paramYear !== undefined ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">
@@ -120,11 +120,11 @@ function Search() {
           </div>
         </div>
       ) : (
-        <div className="w-full">
-          <h1 className="py-4 mb-5 text-2xl font-normal text-center font-NotoSansTC md:text-[32px]">
+        <div className="w-full py-4">
+          <h1 className="pb-14 text-2xl font-normal text-center font-NotoSansTC md:text-[32px]">
             人口數、戶數按戶別及性別統計
           </h1>
-          <div className="flex flex-col gap-4 py-2 mb-4 w-full md:flex-row md:justify-center md:items-center md:h-12">
+          <div className="flex flex-col gap-4 mb-4 w-full md:flex-row md:justify-center md:items-center md:h-12">
             <Selector
               size="small"
               options={optionsData.years}
@@ -184,7 +184,7 @@ function Search() {
             <hr className="flex-grow border-0 h-[1px] bg-secondary-300" />
           </div>
           {message === '處理完成' ? (
-            <div className="py-10 w-full md:py-16">
+            <div className="pt-8 w-full">
               <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
                 {paramYear}
                 年
