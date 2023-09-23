@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { clsx as cx } from 'clsx';
 import { IcTwotoneClose, MsArrowDropDown } from './Icons';
-import { optionsData } from '../libs/data';
 
 export type SelectorProps = {
   options: string[];
@@ -33,33 +32,11 @@ function Selector({
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     initialValue || '',
   );
-  const [oldSelectedCity, setOldSelectedCity] = useState<string | undefined>(
-    selectedCity,
-  );
   const sidebarRef = useRef<HTMLDivElement>(null);
   const onCloseSide = () => setIsOpen(false);
   const stopProp = (e: React.MouseEvent) => e.stopPropagation();
   const toggleDropdown = () => {
     setIsOpen((prevValue) => !prevValue);
-  };
-
-  const checkInitailValue = (str: string | undefined, key: string) => {
-    const optionsFlattenArray = [
-      ...optionsData.years,
-      ...optionsData.cities,
-      ...Object.values(optionsData.districts).flat(),
-    ];
-
-    const initailValue: Record<string, string> = {
-      year: '111',
-      city: '請選擇 縣/市',
-      district: '請先選擇 縣/市',
-    };
-
-    if (!optionsFlattenArray.includes(str || '')) {
-      return initailValue[key];
-    }
-    return str;
   };
 
   const handleOptionClick = (option: string) => {
@@ -88,21 +65,14 @@ function Selector({
 
   useEffect(() => {
     if (isRelative) {
-      setOldSelectedCity(selectedCity);
-    }
-
-    if (oldSelectedCity !== selectedCity && isRelative) {
-      if (selectedCity === '') {
+      if (selectedCity === '' || selectedCity === '請選擇 縣/市') {
         setSelectedOption('請先選擇 縣/市');
-        onSelect('');
       } else {
-        setTimeout(() => {
-          setSelectedOption(options[0]);
-          onSelect(options[0]);
-        }, 100);
+        setSelectedOption('');
       }
+      onSelect('');
     }
-  }, [selectedCity, isRelative, oldSelectedCity, onSelect, options]);
+  }, [selectedCity, isRelative, onSelect]);
 
   return (
     <div
@@ -156,9 +126,9 @@ function Selector({
             <p
               className={cx(
                 isDisabled
-                  ? 'cursor-not-allowed text-gray-300/80'
+                  ? 'text-gray-300/80 cursor-not-allowed '
                   : 'text-gray-700 cursor-default',
-                'font-normal   font-NotoSansTC',
+                'font-normal font-NotoSansTC',
               )}
             >
               {selectedOption}
