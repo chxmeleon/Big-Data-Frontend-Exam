@@ -92,7 +92,7 @@ function Selectors({
           )}
         </button>
       </div>
-      <div className="flex justify-end pr-1 md:justify-center md:pl-[11.66rem]">
+      <div className="flex justify-end pr-1 pt-3 md:justify-center">
         <div className="inline-flex gap-3 justify-between items-center">
           <button
             type="button"
