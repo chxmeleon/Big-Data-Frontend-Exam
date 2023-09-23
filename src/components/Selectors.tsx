@@ -92,7 +92,7 @@ function Selectors({
           )}
         </button>
       </div>
-      <div className="flex justify-center pl-[11.66rem]">
+      <div className="flex justify-end pr-1 md:justify-center md:pl-[11.66rem]">
         <div className="inline-flex gap-3 justify-between items-center">
           <button
             type="button"
@@ -105,7 +105,7 @@ function Selectors({
               'p-2 rounded border',
             )}
           />
-          <p className="text-xs text-gray-700">區 選項自動補全</p>
+          <p className="text-xs text-gray-700">區 選項自動選取</p>
         </div>
       </div>
     </>
