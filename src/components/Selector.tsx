@@ -88,7 +88,11 @@ function Selector({
     <div
       ref={sidebarRef}
       onClick={onCloseSide}
-      className={cx(selectorSize[size], 'inline-block relative text-left')}
+      className={cx(
+        selectorSize[size],
+        'inline-block relative text-left',
+        isDisabled ? 'hover:cursor-not-allowed' : '',
+      )}
       aria-hidden="true"
     >
       <div className="relative w-full" onClick={stopProp} aria-hidden="true">
@@ -99,10 +103,6 @@ function Selector({
               : 'text-gray-700 border-gray-300 hover:border-primary-100',
             'inline-flex justify-between items-center p-3 w-full bg-white rounded-md border shadow-sm ',
           )}
-          id="options-menu"
-          aria-haspopup="listbox"
-          aria-expanded="true"
-          aria-labelledby="options-menu"
         >
           <span
             className={cx(
@@ -114,7 +114,12 @@ function Selector({
           >
             {title}
           </span>
-          <p className="font-normal cursor-default font-NotoSansTC">
+          <p
+            className={cx(
+              isDisabled ? 'cursor-not-allowed' : 'cursor-default',
+              'font-normal   font-NotoSansTC',
+            )}
+          >
             {selectedOption}
           </p>
           <div className="flex items-center">

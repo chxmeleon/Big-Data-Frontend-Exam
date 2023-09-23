@@ -36,8 +36,6 @@ function Search() {
   const [district, setDistrict] = useState<string | undefined>(
     paramDistrict || '請先選擇 縣/市',
   );
-  const [oldCity, setOldCity] = useState<string | undefined>(city);
-  const isSameCity = oldCity === city;
 
   const navigate = useNavigate();
   const handleClick = () => {
@@ -52,11 +50,10 @@ function Search() {
     [endpoint, paramYear, paramCity, paramDistrict],
   );
 
-  const {
-    data: searchData,
-    isLoading,
-    error,
-  } = useSWR<ApiResponse>(requestApiPath, fetcher);
+  const { data: searchData, isLoading } = useSWR<ApiResponse>(
+    requestApiPath,
+    fetcher,
+  );
 
   const checkResponseApiPath = useMemo(
     () => `${endpoint}/${year}?COUNTY=${changeString(city)}&TOWN=${changeString(
@@ -158,7 +155,7 @@ function Search() {
               type="submit"
               className={cx(
                 isButtonDisabled
-                  ? 'bg-neutral-200 text-black/25'
+                  ? 'bg-neutral-200 text-black/25 cursor-not-allowed'
                   : 'bg-primary-100 text-white',
                 ' w-full md:w-24 h-12 py-2.5 font-bold rounded inline-flex justify-center items-center font-Ubuntu',
               )}
