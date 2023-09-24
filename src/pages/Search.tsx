@@ -148,8 +148,6 @@ function Search() {
     }
   }, [setIsScrolling, isScrolling, scrollTargetRef, isSubmit, isShowChart]);
 
-  console.log(useDebounced(isSubmit, 1200));
-
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48">
       {useDebounced(isLoading, 1200) && paramYear !== undefined ? (
