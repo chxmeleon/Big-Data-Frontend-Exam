@@ -10,6 +10,7 @@ function Header() {
         </Link>
         <button
           type="button"
+          aria-label="setting"
           disabled
           className="flex justify-center items-center w-8 h-8 border hover:cursor-not-allowed rounded-[8px] border-white/30"
         >

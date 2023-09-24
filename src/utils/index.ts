@@ -1,4 +1,5 @@
 import * as Highcharts from 'highcharts';
+import { useMemo } from 'react';
 
 export const changeString = (str: string | undefined): string | undefined => (str?.includes('台') ? str.replace('台', '臺') : str);
 

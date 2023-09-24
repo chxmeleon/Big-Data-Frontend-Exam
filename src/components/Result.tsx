@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { clsx as cx } from 'clsx';
 import * as Highcharts from 'highcharts';
-import { useParams } from 'react-router-dom';
 import Chart from './Chart';
 import Spinner from './Spinner';
 
@@ -8,36 +8,21 @@ export interface ResultProps {
   isProcessing: boolean;
   isNoData: boolean;
   isShowChart: boolean;
-  title: string;
+  resultTitle: string;
   columnOptions: Highcharts.Options;
   pieOptions: Highcharts.Options;
-  isScrolling: boolean;
-  setIsScrolling: React.Dispatch<React.SetStateAction<boolean>>;
+  scrollTargetRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 function Result({
   isProcessing,
   isNoData,
   isShowChart,
-  title,
+  resultTitle,
   columnOptions,
   pieOptions,
-  isScrolling,
-  setIsScrolling,
+  scrollTargetRef,
 }: ResultProps) {
-  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (scrollTargetRef.current) {
-      if (isScrolling && isProcessing) {
-        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-        setIsScrolling(false);
-      } else if (isShowChart) {
-        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [setIsScrolling, isScrolling, scrollTargetRef, isProcessing, isShowChart]);
-
   return (
     <>
       <div className="inline-flex relative justify-between items-center pt-9 w-full">
@@ -47,11 +32,13 @@ function Result({
         </div>
         <hr className="flex-grow border-0 h-[1px] bg-secondary-300" />
       </div>
-      <div className="w-full h-full" ref={scrollTargetRef}>
+      <div className="relative w-full h-full" ref={scrollTargetRef}>
         {isProcessing ? (
-          <div className="flex flex-col items-center pt-20 md:pb-96 h-[550px] md:h-full md:pt-[12.6rem]">
-            <Spinner size="lg" />
-            <h1 className="py-10 text-3xl">載入中...</h1>
+          <div className="pt-20 w-full md:pb-96 md:h-full h-[550px] md:pt-[12.6rem]">
+            <div className="flex flex-col items-center">
+              <Spinner size="lg" />
+              <h1 className="py-10 text-3xl">載入中...</h1>
+            </div>
           </div>
         ) : isNoData ? (
           <div className="py-10 w-full md:py-16">
@@ -62,10 +49,10 @@ function Result({
         ) : isShowChart ? (
           <div className="pt-8 w-full">
             <h2 className="font-normal text-center font-NotoSansTC text-[32px]">
-              {title}
+              {resultTitle}
             </h2>
-            <Chart options={columnOptions} />
-            <Chart options={pieOptions} />
+            <Chart key="columnChart" options={columnOptions} />
+            <Chart key="pieChart" options={pieOptions} />
           </div>
         ) : null}
       </div>

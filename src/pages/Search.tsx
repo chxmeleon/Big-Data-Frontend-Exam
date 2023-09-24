@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+import {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import Selectors, { SelectorsProps } from '../components/Selectors';
@@ -60,31 +62,61 @@ function Search() {
     setIsSubmit(true);
     setTimeout(() => {
       setIsSubmit(false);
-    }, 1000);
+    }, 2000);
 
     setIsScrolling(true);
   };
 
   const message = searchData?.responseMessage;
-  const finalData = sumProperties(searchData?.responseData || [], [
-    'household_ordinary_total',
-    'household_single_total',
-    'household_single_m',
-    'household_single_f',
-    'household_ordinary_m',
-    'household_ordinary_f',
-  ]);
+  const finalData = useMemo(
+    () => sumProperties(searchData?.responseData || [], [
+      'household_ordinary_total',
+      'household_single_total',
+      'household_single_m',
+      'household_single_f',
+      'household_ordinary_m',
+      'household_ordinary_f',
+    ]),
+    [searchData],
+  );
+
+  const resultTitle = useMemo(
+    () => `${paramYear}年 ${paramCity} ${paramDistrict}`,
+    [paramYear, paramCity, paramDistrict],
+  );
+
+  const columnOptions = useMemo(
+    () => generateColumnChartOptions(finalData),
+    [finalData],
+  );
+
+  const pieOptions = useMemo(
+    () => generatePieChartOptions(
+      calcPercentFromTwoValue(
+        finalData.householdSingleTotal,
+        finalData.householdOrdinaryTotal,
+      ),
+      calcPercentFromTwoValue(
+        finalData.householdOrdinaryTotal,
+        finalData.householdSingleTotal,
+      ),
+    ),
+    [finalData],
+  );
 
   const cityDistrictArray = [
     ...optionsData.cities,
     ...Object.values(optionsData.districts).flat(),
   ];
 
-  const isBtnDisabled = !cityDistrictArray.includes(city as string)
+  const isButtonDisabled = !cityDistrictArray.includes(city as string)
     || !cityDistrictArray.includes(district as string);
 
+  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
+  const isShowChart = message === '處理完成' && paramYear !== undefined;
+
   const selectorsProps: SelectorsProps = {
-    isButtonDisabled: isBtnDisabled,
+    isButtonDisabled,
     message,
     year,
     setYear,
@@ -96,24 +128,27 @@ function Search() {
   };
 
   const resutlProps: ResultProps = {
-    isScrolling,
-    setIsScrolling,
-    title: `${paramYear}年 ${paramCity} ${paramDistrict}`,
-    isProcessing: message === '處理完成' && paramYear !== undefined && isSubmit,
+    scrollTargetRef,
+    resultTitle,
+    isProcessing: isSubmit && message === '處理完成' && paramYear !== undefined,
     isNoData: message === '查無資料' && paramYear !== undefined,
-    isShowChart: message === '處理完成' && paramYear !== undefined,
-    columnOptions: generateColumnChartOptions(finalData),
-    pieOptions: generatePieChartOptions(
-      calcPercentFromTwoValue(
-        finalData.householdSingleTotal,
-        finalData.householdOrdinaryTotal,
-      ),
-      calcPercentFromTwoValue(
-        finalData.householdOrdinaryTotal,
-        finalData.householdSingleTotal,
-      ),
-    ),
+    isShowChart,
+    columnOptions,
+    pieOptions,
   };
+
+  useEffect(() => {
+    if (scrollTargetRef.current) {
+      if (isScrolling && isShowChart && isSubmit) {
+        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
+        setIsScrolling(false);
+      } else if (isShowChart) {
+        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [setIsScrolling, isScrolling, scrollTargetRef, isSubmit, isShowChart]);
+
+  console.log(useDebounced(isSubmit, 1200));
 
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48">
