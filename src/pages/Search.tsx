@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+import {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import Selectors, { SelectorsProps } from '../components/Selectors';
@@ -11,7 +13,6 @@ import {
   generatePieChartOptions,
   sumProperties,
 } from '../utils';
-import Chart from '../components/Chart';
 import Result, { ResultProps } from '../components/Result';
 import checkInitailValue from '../utils/checkInitialValue';
 import { optionsData } from '../libs/data';
@@ -54,25 +55,17 @@ function Search() {
     fetcher,
   );
 
-  const checkResponseApiPath = useMemo(
-    () => `${endpoint}/${year}?COUNTY=${changeString(city)}&TOWN=${changeString(
-      district,
-    )}`,
-    [endpoint, year, city, district],
-  );
-
-  const { data: checkState } = useSWR<ApiResponse>(
-    checkResponseApiPath,
-    fetcher,
-  );
-
+  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const handleClick = () => {
     navigate(`/${year}/${city}/${district}`);
     setIsSubmit(true);
     setTimeout(() => {
       setIsSubmit(false);
     }, 1000);
+
+    setIsScrolling(true);
   };
 
   const message = searchData?.responseMessage;
@@ -85,7 +78,16 @@ function Search() {
     'household_ordinary_f',
   ]);
 
+  const cityDistrictArray = [
+    ...optionsData.cities,
+    ...Object.values(optionsData.districts).flat(),
+  ];
+
+  const isBtnDisabled = !cityDistrictArray.includes(city as string)
+    || !cityDistrictArray.includes(district as string);
+
   const selectorsProps: SelectorsProps = {
+    isButtonDisabled: isBtnDisabled,
     message,
     year,
     setYear,
@@ -97,6 +99,8 @@ function Search() {
   };
 
   const resutlProps: ResultProps = {
+    isScrolling,
+    setIsScrolling,
     title: `${paramYear}年 ${paramCity} ${paramDistrict}`,
     isProcessing: message === '處理完成' && paramYear !== undefined && isSubmit,
     isNoData: message === '查無資料' && paramYear !== undefined,
@@ -113,6 +117,18 @@ function Search() {
       ),
     ),
   };
+
+  useEffect(() => {
+    if (
+      isScrolling
+      && message === '處理完成'
+      && paramYear !== undefined
+      && scrollTargetRef.current
+    ) {
+      scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
+      setIsScrolling(false);
+    }
+  }, [isScrolling, message, paramYear, scrollTargetRef]);
 
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48 lg:bg-transparent bg-white/80">

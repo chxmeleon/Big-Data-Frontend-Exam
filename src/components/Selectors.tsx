@@ -6,6 +6,7 @@ import { optionsData } from '../libs/data';
 import useDebounced from '../hooks/useDebounced';
 
 export interface SelectorsProps {
+  isButtonDisabled: boolean;
   message: string | undefined;
   year: string | undefined;
   setYear: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -13,10 +14,11 @@ export interface SelectorsProps {
   setCity: React.Dispatch<React.SetStateAction<string | undefined>>;
   district: string | undefined;
   setDistrict: React.Dispatch<React.SetStateAction<string | undefined>>;
-  handleClick: () => void;
+  handleClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 function Selectors({
+  isButtonDisabled,
   message,
   year,
   setYear,
@@ -30,11 +32,6 @@ function Selectors({
   const onToggleAutoDistrict = () => {
     setHasAutoDistrict((prev) => !prev);
   };
-
-  const isButtonDisabled = district === undefined
-    || district === ''
-    || city === ''
-    || year === undefined;
 
   return (
     <>
@@ -92,7 +89,7 @@ function Selectors({
           )}
         </button>
       </div>
-      <div className="flex justify-end pr-1 pt-3 md:justify-center">
+      <div className="flex justify-end pt-3 pr-1 md:justify-center">
         <div className="inline-flex gap-3 justify-between items-center">
           <button
             type="button"

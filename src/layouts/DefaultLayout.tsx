@@ -17,7 +17,7 @@ function DefaultLayout() {
           <div
             className={cx(
               location.pathname === '/'
-                ? 'h-[calc(100vh-3.25rem)] sm:h-[calc(100vh-3.8rem)] md:h-[calc(100vh-4.7rem)]'
+                ? 'h-[calc(100vh-3.8rem)] md:h-[calc(100vh-4.7rem)]'
                 : 'h-full',
               'w-full 2xl:max-w-7xl',
             )}

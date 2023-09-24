@@ -144,7 +144,7 @@ function Selector({
             <div className="flex items-center">
               <MsArrowDropDown
                 className={cx(
-                  isDisabled ? '' : 'hover:text-primary-300',
+                  isDisabled ? 'text-gray-300/80' : 'hover:text-primary-300',
                   'ml-1 -mr-2 w-7 h-7 ',
                 )}
               />
