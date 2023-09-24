@@ -1,6 +1,4 @@
-import {
-  useEffect, useMemo, useRef, useState,
-} from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import Selectors, { SelectorsProps } from '../components/Selectors';
@@ -55,7 +53,6 @@ function Search() {
     fetcher,
   );
 
-  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const handleClick = () => {
@@ -118,18 +115,6 @@ function Search() {
     ),
   };
 
-  useEffect(() => {
-    if (
-      isScrolling
-      && message === '處理完成'
-      && paramYear !== undefined
-      && scrollTargetRef.current
-    ) {
-      scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-      setIsScrolling(false);
-    }
-  }, [isScrolling, message, paramYear, scrollTargetRef]);
-
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48">
       {useDebounced(isLoading, 1200) && paramYear !== undefined ? (
@@ -140,7 +125,7 @@ function Search() {
           </div>
         </div>
       ) : (
-        <div className="py-4 w-full">
+        <div className="relative py-4 w-full">
           <Selectors {...selectorsProps} />
           <Result {...resutlProps} />
         </div>

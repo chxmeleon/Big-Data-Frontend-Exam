@@ -1,5 +1,5 @@
 import { clsx as cx } from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Selector from './Selector';
 import Spinner from './Spinner';
 import { optionsData } from '../libs/data';

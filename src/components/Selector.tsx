@@ -126,7 +126,7 @@ function Selector({
             <span
               className={cx(
                 isDisabled ? 'text-gray-300/80' : 'hover:text-primary-100',
-                'absolute -top-1.5 left-3 px-1 text-xs text-center z-10 bg-white',
+                'absolute -top-2 left-3 px-1 text-xs text-center z-10 bg-white/95 rounded',
               )}
             >
               {title}
