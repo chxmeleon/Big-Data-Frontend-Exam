@@ -51,8 +51,9 @@ function Search() {
     [endpoint, paramYear, paramCity, paramDistrict],
   );
 
+  const isUndefinedParam = !paramYear || !paramCity || !paramDistrict;
   const { data: searchData, isLoading } = useSWR<ApiResponse>(
-    requestApiPath,
+    !isUndefinedParam ? requestApiPath : null,
     fetcher,
   );
 

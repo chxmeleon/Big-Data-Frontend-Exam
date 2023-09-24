@@ -54,7 +54,9 @@ function Result({
             <Chart key="columnChart" options={columnOptions} />
             <Chart key="pieChart" options={pieOptions} />
           </div>
-        ) : null}
+        ) : (
+          <div className="h-[700px]" />
+        )}
       </div>
     </>
   );
