@@ -9,7 +9,7 @@ function DefaultLayout() {
       <Header />
       <div className="w-full lg:flex">
         <div className="relative w-[146px]">
-          <div className="fixed font-bold z-[-1] left-0 top-0 rotate-90 -translate-x-4 -translate-y-[61%] tracking-[3.2rem] liner-gradient text-[200px] font-Ubuntu">
+          <div className="fixed font-bold z-[-1] left-0 top-0 rotate-90 -translate-x-4 -translate-y-[61%] tracking-[2.2rem] liner-gradient text-[200px] font-Ubuntu">
             TAIWAN
           </div>
         </div>

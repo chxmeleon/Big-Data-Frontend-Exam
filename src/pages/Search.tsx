@@ -1,7 +1,7 @@
 import {
   useEffect, useMemo, useRef, useState,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import Selectors, { SelectorsProps } from '../components/Selectors';
 import Spinner from '../components/Spinner';
@@ -31,6 +31,7 @@ function Search() {
     district: paramDistrict,
   } = useParams();
 
+  const location = useLocation();
   const navigate = useNavigate();
   const [year, setYear] = useState<string | undefined>(
     checkInitailValue(paramYear, 'year'),
@@ -56,15 +57,12 @@ function Search() {
   );
 
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const handleClick = () => {
     navigate(`/${year}/${city}/${district}`);
     setIsSubmit(true);
     setTimeout(() => {
       setIsSubmit(false);
     }, 2000);
-
-    setIsScrolling(true);
   };
 
   const message = searchData?.responseMessage;
@@ -113,7 +111,7 @@ function Search() {
     || !cityDistrictArray.includes(district as string);
 
   const scrollTargetRef = useRef<HTMLDivElement | null>(null);
-  const isShowChart = message === '處理完成' && paramYear !== undefined;
+  const isShowChart = message === '處理完成' && location.pathname !== '/';
 
   const selectorsProps: SelectorsProps = {
     isButtonDisabled,
@@ -130,27 +128,24 @@ function Search() {
   const resutlProps: ResultProps = {
     scrollTargetRef,
     resultTitle,
-    isProcessing: isSubmit && message === '處理完成' && paramYear !== undefined,
-    isNoData: message === '查無資料' && paramYear !== undefined,
     isShowChart,
+    isNoData: message === '查無資料' && location.pathname !== '/',
+    isProcessing: isSubmit && isShowChart,
     columnOptions,
     pieOptions,
   };
 
   useEffect(() => {
-    if (scrollTargetRef.current) {
-      if (isScrolling && isShowChart && isSubmit) {
-        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-        setIsScrolling(false);
-      } else if (isShowChart) {
-        scrollTargetRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
+    const scrollTarget = scrollTargetRef.current;
+
+    if (scrollTarget && (isSubmit || isShowChart)) {
+      scrollTarget.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [setIsScrolling, isScrolling, scrollTargetRef, isSubmit, isShowChart]);
+  }, [scrollTargetRef, isSubmit, isShowChart]);
 
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48">
-      {useDebounced(isLoading, 1200) && paramYear !== undefined ? (
+      {useDebounced(isLoading, 1200) && location.pathname !== '/' ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">
             <Spinner size="lg" />

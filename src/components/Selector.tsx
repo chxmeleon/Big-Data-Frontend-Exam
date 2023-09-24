@@ -52,8 +52,6 @@ function Selector({
     onSelect('');
   };
 
-  const randomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
-
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!sidebarRef.current?.contains(e.target as Node | null)) {
@@ -66,6 +64,8 @@ function Selector({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [sidebarRef, isOpen]);
+
+  const randomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
 
   useEffect(() => {
     if (isRelative) {
@@ -155,7 +155,7 @@ function Selector({
         {isOpen && (
           <div className="overflow-y-auto absolute right-0 z-30 mt-0.5 w-full max-h-64 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg origin-top-right">
             <div
-              className="py-1"
+              className="p-1"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="options-menu"
@@ -164,7 +164,10 @@ function Selector({
                 <div
                   key={option}
                   onClick={() => handleOptionClick(option)}
-                  className="block py-2 px-4 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-100 active:bg-secondary-300"
+                  className={cx(
+                    option === selectedOption ? 'bg-secondary-100/40' : '',
+                    'block py-2 px-4 text-gray-700 cursor-pointer hover:text-gray-100 hover:bg-primary-300 active:bg-secondary-300 rounded',
+                  )}
                   aria-hidden="true"
                 >
                   {option}
