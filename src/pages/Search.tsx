@@ -131,7 +131,7 @@ function Search() {
   }, [isScrolling, message, paramYear, scrollTargetRef]);
 
   return (
-    <div className="px-2 w-full h-full md:px-6 lg:px-48 lg:bg-transparent bg-white/80">
+    <div className="px-2 w-full h-full md:px-6 lg:px-48">
       {useDebounced(isLoading, 1200) && paramYear !== undefined ? (
         <div className="flex justify-center items-center w-full h-[95vh]">
           <div className="flex flex-col justify-center items-center">

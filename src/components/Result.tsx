@@ -49,7 +49,7 @@ function Result({
       </div>
       <div className="w-full h-full" ref={scrollTargetRef}>
         {isProcessing ? (
-          <div className="h-full flex flex-col justify-center items-center pt-28 pr-3 md:pb-96 md:pt-[12.6rem]">
+          <div className="flex flex-col items-center pt-20 md:pb-96 h-[550px] md:h-full md:pt-[12.6rem]">
             <Spinner size="lg" />
             <h1 className="py-10 text-3xl">載入中...</h1>
           </div>
