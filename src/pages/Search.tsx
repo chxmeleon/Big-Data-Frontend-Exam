@@ -16,6 +16,7 @@ import {
 import Result, { ResultProps } from '../components/Result';
 import checkInitailValue from '../utils/checkInitialValue';
 import { optionsData } from '../libs/data';
+import useScreenSize from '../hooks/useScreenSize';
 
 interface ApiResponse {
   responseData: Record<string, number>[];
@@ -136,13 +137,15 @@ function Search() {
     pieOptions,
   };
 
+  const { isMobile } = useScreenSize();
+
   useEffect(() => {
     const scrollTarget = scrollTargetRef.current;
 
-    if (scrollTarget && (isSubmit || isShowChart)) {
+    if (isMobile && scrollTarget && (isSubmit || isShowChart)) {
       scrollTarget.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [scrollTargetRef, isSubmit, isShowChart]);
+  }, [isMobile, scrollTargetRef, isSubmit, isShowChart]);
 
   return (
     <div className="px-2 w-full h-full md:px-6 lg:px-48">
